@@ -527,7 +527,7 @@ shareBtn.addEventListener("click", () => {
     new QRCode(qrCodeCanvas, {
       text: shareLink,
       width: 160,
-      height: 160
+      height: 160,
       correctLevel: QRCode.CorrectLevel.L // ←追加
     });
   } catch (err) {
@@ -585,3 +585,4 @@ tryLoadSharedList();
 </script>
 </body>
 </html>
+
