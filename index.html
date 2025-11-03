@@ -5,221 +5,42 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>お題シャッフル</title>
 <style>
-  body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
-    background: #f5f5f5;
-    margin: 0;
-    padding: 16px;
-    color: #222;
-  }
-  .wrap {
-    max-width: 480px;
-    margin: 0 auto;
-  }
-  h1 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin: 0 0 12px;
-    text-align: center;
-  }
-  .card {
-    background: #fff;
-    border-radius: 12px;
-    border: 1px solid #ddd;
-    padding: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    margin-bottom: 16px;
-  }
-  label {
-    font-size: .9rem;
-    font-weight: 600;
-    display: block;
-    margin-bottom: 6px;
-  }
-  select,
-  input[type="text"],
-  input[type="number"] {
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 1rem;
-    padding: 8px 10px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-  }
-  .row-flex {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .btn {
-    flex: 1;
-    font-size: .95rem;
-    font-weight: 600;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-  }
-  .btn-main {
-    background: #2563eb;
-    color: #fff;
-  }
-  .btn-gray {
-    background: #eee;
-    color: #222;
-  }
-  .btn-outline {
-    background: #fff;
-    color: #2563eb;
-    border: 2px solid #2563eb;
-  }
-  .hint {
-    font-size: .75rem;
-    color: #666;
-    margin-top: -4px;
-    margin-bottom: 12px;
-  }
+  body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP", sans-serif; background: #f5f5f5; margin: 0; padding: 16px; color: #222; }
+  .wrap { max-width: 480px; margin: 0 auto; }
+  h1 { font-size: 1.2rem; font-weight: 600; margin: 0 0 12px; text-align: center; }
+  .card { background: #fff; border-radius: 12px; border: 1px solid #ddd; padding: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 16px; }
+  label { font-size: .9rem; font-weight: 600; display: block; margin-bottom: 6px; }
+  select, input[type="text"], input[type="number"] { width: 100%; box-sizing: border-box; font-size: 1rem; padding: 8px 10px; margin-bottom: 8px; border-radius: 8px; border: 1px solid #ccc; }
+  .row-flex { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn { flex: 1; font-size: .95rem; font-weight: 600; padding: 10px 12px; border-radius: 8px; border: none; cursor: pointer; }
+  .btn-main { background: #2563eb; color: #fff; }
+  .btn-gray { background: #eee; color: #222; }
+  .btn-outline { background: #fff; color: #2563eb; border: 2px solid #2563eb; }
+  .hint { font-size: .75rem; color: #666; margin-top: -4px; margin-bottom: 12px; }
 
-  .result-box {
-    background: #e8f0ff;
-    border: 2px solid #2563eb;
-    border-radius: 12px;
-    padding: 20px 12px;
-    text-align: center;
-    min-height: 70px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .result-main {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #2563eb;
-    word-break: break-word;
-  }
-  .result-sub {
-    font-size: .8rem;
-    color: #555;
-    margin-top: 8px;
-  }
+  .result-box { background: #e8f0ff; border: 2px solid #2563eb; border-radius: 12px; padding: 20px 12px; text-align: center; min-height: 70px; display: flex; flex-direction: column; justify-content: center; }
+  .result-main { font-size: 1.3rem; font-weight: 700; color: #2563eb; word-break: break-word; }
+  .result-sub { font-size: .8rem; color: #555; margin-top: 8px; }
 
-  .screen {
-    display: none;
-  }
-  .screen.active {
-    display: block;
-  }
+  .screen { display: none; }
+  .screen.active { display: block; }
 
-  .list-area {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 6px;
-    margin-bottom: 8px;
-  }
-  .add-btn-row {
-    text-align: right;
-    margin-bottom: 8px;
-  }
-  .add-btn-row button {
-    font-size: .8rem;
-    padding: 6px 10px;
-    border-radius: 6px;
-    border: 1px solid #aaa;
-    background: #fafafa;
-    cursor: pointer;
-  }
+  .list-area { display: grid; grid-template-columns: 1fr; gap: 6px; margin-bottom: 8px; }
+  .add-btn-row { text-align: right; margin-bottom: 8px; }
+  .add-btn-row button { font-size: .8rem; padding: 6px 10px; border-radius: 6px; border: 1px solid #aaa; background: #fafafa; cursor: pointer; }
 
-  /* モーダル（QR表示用） */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding:16px;
-    box-sizing:border-box;
-    z-index:9999;
-  }
-  .modal-overlay.active {
-    display:flex;
-  }
-  .modal-card {
-    background:#fff;
-    width:100%;
-    max-width:320px;
-    border-radius:12px;
-    border:1px solid #ddd;
-    box-shadow:0 20px 40px rgba(0,0,0,0.3);
-    padding:16px;
-    text-align:center;
-  }
-  .modal-title {
-    font-size:1rem;
-    font-weight:600;
-    margin-bottom:8px;
-  }
-  .qr-wrap {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    background:#fafafa;
-    border:1px solid #ccc;
-    border-radius:8px;
-    padding:12px;
-    margin-bottom:12px;
-  }
-  #qrCodeCanvas {
-    margin-bottom:8px;
-  }
-  .share-url-box {
-    font-size:.7rem;
-    color:#444;
-    word-break:break-all;
-    background:#fff;
-    border:1px solid #ccc;
-    border-radius:6px;
-    padding:8px;
-    max-height:4.5em;
-    overflow:auto;
-    text-align:left;
-    margin-bottom:12px;
-  }
-  .modal-btn-row {
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-  }
-  .close-btn {
-    flex:1;
-    background:#eee;
-    border:none;
-    border-radius:8px;
-    padding:10px 12px;
-    font-size:.9rem;
-    font-weight:600;
-    cursor:pointer;
-  }
-  .copy-btn {
-    flex:1;
-    background:#2563eb;
-    color:#fff;
-    border:none;
-    border-radius:8px;
-    padding:10px 12px;
-    font-size:.9rem;
-    font-weight:600;
-    cursor:pointer;
-  }
-  .copy-hint {
-    font-size:.7rem;
-    color:#2563eb;
-    min-height:1em;
-    margin-top:4px;
-    text-align:center;
-  }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; padding:16px; box-sizing:border-box; z-index:9999; }
+  .modal-overlay.active { display:flex; }
+  .modal-card { background:#fff; width:100%; max-width:320px; border-radius:12px; border:1px solid #ddd; box-shadow:0 20px 40px rgba(0,0,0,0.3); padding:16px; text-align:center; }
+  .modal-title { font-size:1rem; font-weight:600; margin-bottom:8px; }
+  .qr-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; background:#fafafa; border:1px solid #ccc; border-radius:8px; padding:12px; margin-bottom:12px; }
+  #qrCodeCanvas { margin-bottom:8px; }
+  .share-url-box { font-size:.7rem; color:#444; word-break:break-all; background:#fff; border:1px solid #ccc; border-radius:6px; padding:8px; max-height:4.5em; overflow:auto; text-align:left; margin-bottom:12px; }
+  .modal-btn-row { display:flex; gap:8px; flex-wrap:wrap; }
+  .close-btn, .copy-btn { flex:1; border:none; border-radius:8px; padding:10px 12px; font-size:.9rem; font-weight:600; cursor:pointer; }
+  .close-btn { background:#eee; }
+  .copy-btn { background:#2563eb; color:#fff; }
+  .copy-hint { font-size:.7rem; color:#2563eb; min-height:1em; margin-top:4px; text-align:center; }
 </style>
 </head>
 <body>
@@ -233,6 +54,7 @@
       <label for="presetSelect">プリセットを読み込む</label>
       <select id="presetSelect">
         <option value="">選択してください</option>
+        <option value="omikuji">おみくじ</option>
         <option value="animal">どうぶつ当てクイズ</option>
         <option value="idol">アイドル当てクイズ</option>
         <option value="pref">都道府県当てクイズ</option>
@@ -242,24 +64,17 @@
 
     <div class="card">
       <label>お題リスト（1行1つ）</label>
-
       <div class="add-btn-row">
         <button id="addRowBtn">＋ 行を追加</button>
       </div>
-
-      <div id="listContainer" class="list-area">
-        <!-- JSで行を生成 -->
-      </div>
-
+      <div id="listContainer" class="list-area"></div>
       <div class="hint">初期状態では10行用意します。空欄は無視されます。</div>
     </div>
 
     <div class="card">
       <label for="drawCountInput">抽選回数</label>
       <input id="drawCountInput" type="number" min="1" value="10">
-      <div class="hint">
-        回数がリスト数より多い場合は、一巡ごとに自動シャッフルして繰り返します。
-      </div>
+      <div class="hint">回数がリスト数より多い場合は、一巡ごとに自動シャッフルして繰り返します。</div>
     </div>
 
     <div class="card">
@@ -296,29 +111,12 @@
 
 </div>
 
-<!-- モーダル（QR表示） -->
-<div id="qrModal" class="modal-overlay">
-  <div class="modal-card">
-    <div class="modal-title">このリストを共有</div>
-    <div class="qr-wrap">
-      <div id="qrCodeCanvas"></div>
-      <div class="share-url-box" id="shareUrlBox"></div>
-    </div>
-    <div class="modal-btn-row">
-      <button id="copyLinkBtn" class="copy-btn">リンクをコピー</button>
-      <button id="closeModalBtn" class="close-btn">閉じる</button>
-    </div>
-    <div class="copy-hint" id="copyHint"></div>
-  </div>
-</div>
-
-<!-- QRコードライブラリ（シンプル版 / integrity等を外す） -->
+<!-- QRコードライブラリ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
-/*
-  状態管理
-*/
+document.addEventListener('DOMContentLoaded', () => {
+/* 状態管理 */
 const screenSetup   = document.getElementById("screen-setup");
 const screenDraw    = document.getElementById("screen-draw");
 
@@ -353,15 +151,10 @@ let savedListForRestart = [];
 
 // プリセット
 const PRESETS = {
-  animal: [
-    "おおきさ","なきごえ","おもさ","すんでいるばしょ","におい","うごき","てざわり"
-  ],
-  idol: [
-    "色","人数","特技","身長","出身地","ヘアースタイル","性格"
-  ],
-  pref: [
-    "大きさ","都市/田舎","特産品","有名人","作品の舞台","歴史"
-  ]
+  omikuji: ["大吉","吉","中吉","小吉","凶","〇吉","〇吉"],
+  animal:  ["おおきさ","なきごえ","おもさ","すんでいるばしょ","におい","うごき","てざわり"],
+  idol:    ["色","人数","特技","身長","出身地","ヘアースタイル","性格"],
+  pref:    ["大きさ","都市/田舎","特産品","有名人","作品の舞台","歴史"]
 };
 
 // 入力用1行
@@ -393,11 +186,8 @@ presetSelect.addEventListener("change", () => {
   const key = presetSelect.value;
   if (!key) return;
   const presetItems = PRESETS[key] || [];
-
   listContainer.innerHTML = "";
-  presetItems.forEach(item => {
-    listContainer.appendChild(createRow(item));
-  });
+  presetItems.forEach(item => listContainer.appendChild(createRow(item)));
   ensureRows();
 });
 
@@ -427,20 +217,13 @@ toDrawBtn.addEventListener("click", () => {
   const listNow = readListFromInputs();
   const count   = parseInt(drawCountInput.value, 10);
 
-  if (!listNow.length) {
-    alert("リストが空です。1つ以上入力してください。");
-    return;
-  }
-  if (!(count > 0)) {
-    alert("抽選回数は1以上にしてください。");
-    return;
-  }
+  if (!listNow.length) { alert("リストが空です。1つ以上入力してください。"); return; }
+  if (!(count > 0))   { alert("抽選回数は1以上にしてください。"); return; }
 
   originalList = listNow.slice();
   savedListForRestart = listNow.slice();
   drawLimit = count;
   remainingCount = count;
-
   workingPool = shuffleArray(originalList);
 
   resultText.textContent = "（まだスタートしていません）";
@@ -457,19 +240,15 @@ function runDrawOnce() {
     remainText.textContent = "残り 0 回";
     return;
   }
-
   if (workingPool.length === 0) {
-    // 1巡終わったら再シャッフル
     workingPool = shuffleArray(originalList);
   }
-
   const nextItem = workingPool.shift();
   resultText.textContent = nextItem;
 
   remainingCount -= 1;
   remainText.textContent = "残り " + remainingCount + " 回";
 }
-
 drawBtn.addEventListener("click", runDrawOnce);
 
 // 抽選画面のボタンたち
@@ -477,67 +256,48 @@ backBtn.addEventListener("click", () => {
   screenDraw.classList.remove("active");
   screenSetup.classList.add("active");
 });
-
 restartBtn.addEventListener("click", () => {
   originalList = savedListForRestart.slice();
   remainingCount = drawLimit;
   workingPool = shuffleArray(originalList);
-
   resultText.textContent = "（リセットしました）";
   remainText.textContent = "残り " + remainingCount + " 回";
 });
-
 newListBtn.addEventListener("click", () => {
   listContainer.innerHTML = "";
   ensureRows();
   presetSelect.value = "";
   drawCountInput.value = "10";
-
   screenDraw.classList.remove("active");
   screenSetup.classList.add("active");
 });
 
 /* ==== 共有URL + QR ==== */
-
-// 現在のリストをエンコードして ?data=... 付きURLを返す
 function makeShareLink() {
   const listNow = readListFromInputs();
   const payload = { list: listNow };
   const json = JSON.stringify(payload);
-
-  // 日本語 → Base64
   const base64 = btoa(unescape(encodeURIComponent(json)));
-
-  // クエリなしのURL
   const baseUrl = window.location.origin + window.location.pathname;
-  const link = baseUrl + "?data=" + base64;
-  return link;
+  return baseUrl + "?data=" + base64;
 }
 
-// 「このリストを共有」→ モーダル表示
 shareBtn.addEventListener("click", () => {
   const shareLink = makeShareLink();
-
-  // URLをテキスト表示
   shareUrlBox.textContent = shareLink;
 
-  // 既存のQRをクリアしてから生成
   qrCodeCanvas.innerHTML = "";
   try {
     new QRCode(qrCodeCanvas, {
       text: shareLink,
       width: 160,
-      height: 160,
-      correctLevel: QRCode.CorrectLevel.L // ←追加
+      height: 160,                 // ← 修正：カンマ追加
+      correctLevel: QRCode.CorrectLevel.L
     });
   } catch (err) {
     alert("QRコードの生成でエラーが出ました: " + err);
   }
-
-  // コピー結果メッセージ初期化
   copyHint.textContent = "";
-
-  // モーダルを開く
   qrModal.classList.add("active");
 });
 
@@ -564,25 +324,19 @@ function tryLoadSharedList() {
 
   const base64 = params.get("data");
   try {
-    // Base64デコード
     const jsonStr = decodeURIComponent(escape(atob(base64)));
     const obj = JSON.parse(jsonStr);
-
     if (obj && Array.isArray(obj.list)) {
       listContainer.innerHTML = "";
-      obj.list.forEach(item => {
-        listContainer.appendChild(createRow(item));
-      });
+      obj.list.forEach(item => listContainer.appendChild(createRow(item)));
       ensureRows();
     }
   } catch (e) {
     console.warn("共有データの読み込みに失敗しました:", e);
   }
 }
-
-// ページ起動時に共有URLを反映
 tryLoadSharedList();
+}); // DOMContentLoaded
 </script>
 </body>
 </html>
-
